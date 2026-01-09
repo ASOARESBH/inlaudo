@@ -1,0 +1,89 @@
+================================================================================
+  INSTRUÇÕES DE INSTALAÇÃO - ERP INLAUDO
+================================================================================
+
+PASSO A PASSO PARA INSTALAÇÃO NA HOSTGATOR:
+
+1. FAZER UPLOAD DOS ARQUIVOS
+   - Acesse o cPanel da HostGator
+   - Vá em "Gerenciador de Arquivos"
+   - Navegue até "public_html"
+   - Faça upload do arquivo "erp-inlaudo.zip"
+   - Clique com botão direito no arquivo e selecione "Extract"
+   - Mova todos os arquivos da pasta "erp-inlaudo" para "public_html"
+
+2. CONFIGURAR O BANCO DE DADOS
+   - No cPanel, acesse "phpMyAdmin"
+   - Selecione o banco: inlaud99_erpinlaudo
+   - Clique na aba "SQL"
+   - Abra o arquivo "database.sql" e copie todo o conteúdo
+   - Cole na área de texto do phpMyAdmin
+   - Clique em "Executar"
+
+3. VERIFICAR CONFIGURAÇÕES
+   - Abra o arquivo "config.php"
+   - Confirme as credenciais:
+     * Banco: inlaud99_erpinlaudo
+     * Usuário: inlaud99_admin
+     * Senha: Admin259087@
+
+4. ACESSAR O SISTEMA
+   - Abra seu navegador
+   - Digite: http://seudominio.com.br
+   - Você verá o Dashboard do ERP
+
+================================================================================
+
+CREDENCIAIS DO BANCO DE DADOS:
+
+Host: localhost
+Database: inlaud99_erpinlaudo
+Username: inlaud99_admin
+Password: Admin259087@
+
+================================================================================
+
+ESTRUTURA DO SISTEMA:
+
+📁 CRM
+   - Clientes (cadastro com busca automática de CNPJ)
+   - Interações (histórico de contatos)
+
+📁 Financeiro
+   - Contas a Receber (com recorrência)
+   - Contas a Pagar (com recorrência)
+
+📁 Integrações
+   - Boleto CORA
+   - Boleto Stripe
+
+================================================================================
+
+FUNCIONALIDADES PRINCIPAIS:
+
+✅ Cadastro de Clientes (CNPJ e CPF)
+✅ Busca automática de dados via API
+✅ Classificação Lead/Cliente
+✅ Histórico de Interações
+✅ Agendamento de Contatos
+✅ Contas a Receber com Recorrência
+✅ Contas a Pagar com Recorrência
+✅ Dashboard com Indicadores
+✅ Integração CORA e Stripe
+✅ Sistema Responsivo
+
+================================================================================
+
+SUPORTE:
+
+Para dúvidas:
+1. Leia o arquivo README.md completo
+2. Verifique se importou o database.sql
+3. Confirme as credenciais em config.php
+4. Verifique os logs de erro do PHP no cPanel
+
+================================================================================
+
+DESENVOLVIDO PARA INLAUDO - Conectando Saúde e Tecnologia
+
+================================================================================

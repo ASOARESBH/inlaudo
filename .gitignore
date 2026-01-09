@@ -1,0 +1,69 @@
+# ============================================================
+# ERP INLAUDO - Git Ignore
+# ============================================================
+
+# Variáveis de Ambiente
+.env
+.env.local
+.env.production
+.env.backup
+
+# Composer
+/vendor/
+composer.lock
+
+# Logs
+/logs/*.log
+/storage/logs/*.log
+*.log
+
+# Cache
+/storage/cache/*
+!/storage/cache/.gitkeep
+
+# Uploads
+/uploads/*
+!/uploads/.gitkeep
+/storage/uploads/*
+!/storage/uploads/.gitkeep
+
+# Backups de Banco de Dados
+/database/backups/*.sql
+/database/backups/*.zip
+
+# Arquivos temporários
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# Sistema Operacional
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDEs
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.code-workspace
+
+# Node (se usar)
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# PHP
+.phpunit.result.cache
+phpunit.xml
+
+# Certificados SSL
+/certs/*.pem
+/certs/*.key
+/certs/*.crt
+
+# Configurações locais (manter apenas exemplos)
+config.php
+# Manter config/Config.php que usa variáveis de ambiente

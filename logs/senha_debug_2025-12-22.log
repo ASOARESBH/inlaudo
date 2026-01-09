@@ -1,0 +1,24 @@
+[2025-12-22 16:42:39] VERIFICAÇÃO DE SENHA
+E-mail: financeiro@inlaudo.com.br
+Senha digitada: Admin259087@
+Hash no banco: $2y$10$YourHashWillBeGeneratedHere
+Resultado password_verify: FALSE
+Versão PHP: 8.2.23
+Algoritmo disponível: SIM
+================================================================================
+[2025-12-22 16:42:54] VERIFICAÇÃO DE SENHA
+E-mail: financeiro@inlaudo.com.br
+Senha digitada: Admin259087@
+Hash no banco: $2y$10$YourHashWillBeGeneratedHere
+Resultado password_verify: FALSE
+Versão PHP: 8.2.23
+Algoritmo disponível: SIM
+================================================================================
+[2025-12-22 16:43:10] VERIFICAÇÃO DE SENHA
+E-mail: financeiro@inlaudo.com.br
+Senha digitada: Admin259087@
+Hash no banco: $2y$10$YourHashWillBeGeneratedHere
+Resultado password_verify: FALSE
+Versão PHP: 8.2.23
+Algoritmo disponível: SIM
+================================================================================

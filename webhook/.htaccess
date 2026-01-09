@@ -1,0 +1,20 @@
+# Proteção de Webhook Asaas
+# Apenas POST é permitido para asaas.php
+# Logs são protegidos de acesso direto
+
+# Proteger arquivos de log
+<Files "*.log">
+    Order allow,deny
+    Deny from all
+</Files>
+
+# Permitir apenas POST para webhooks
+<Files "*.php">
+    <Limit GET HEAD PUT DELETE>
+        Order allow,deny
+        Deny from all
+    </Limit>
+</Files>
+
+# Desabilitar listagem de diretório
+Options -Indexes

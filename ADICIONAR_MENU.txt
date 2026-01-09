@@ -1,0 +1,31 @@
+====================================================================
+ADICIONAR LINK DE FATURAMENTO NO MENU
+====================================================================
+
+Editar o arquivo: header.php
+
+Localizar a linha que contém:
+    <a href="integracao_mercadopago.php" class="nav-link">
+
+Logo APÓS essa linha, adicionar:
+
+    <a href="faturamento_completo.php" class="nav-link">
+        <i class="fas fa-file-invoice-dollar"></i> Faturamento
+    </a>
+
+====================================================================
+RESULTADO ESPERADO:
+====================================================================
+
+O menu ficará assim:
+
+    ...
+    <a href="integracao_mercadopago.php" class="nav-link">
+        <i class="fab fa-cc-mastercard"></i> Mercado Pago
+    </a>
+    <a href="faturamento_completo.php" class="nav-link">
+        <i class="fas fa-file-invoice-dollar"></i> Faturamento
+    </a>
+    ...
+
+====================================================================

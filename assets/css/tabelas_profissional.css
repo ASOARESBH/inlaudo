@@ -1,0 +1,671 @@
+/**
+ * CSS Profissional para Tabelas - ERP Inlaudo
+ * Aplicável a todas as páginas de listagem
+ * Responsivo para desktop, tablet e mobile
+ */
+
+/* ============================================================================
+   CONTAINER DE TABELA
+   ============================================================================ */
+
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    background-color: white;
+}
+
+.table-container table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0;
+    padding: 0;
+}
+
+/* ============================================================================
+   CABEÇALHO DA TABELA
+   ============================================================================ */
+
+table thead {
+    background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+table thead th {
+    color: white;
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 1rem;
+    text-align: left;
+    border: none;
+    white-space: nowrap;
+    user-select: none;
+}
+
+table thead th:hover {
+    background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+}
+
+/* ============================================================================
+   CORPO DA TABELA
+   ============================================================================ */
+
+table tbody tr {
+    border-bottom: 1px solid #e2e8f0;
+    transition: all 0.3s ease;
+}
+
+table tbody tr:hover {
+    background-color: #f8fafc;
+    box-shadow: inset 0 0 0 1px #e2e8f0;
+}
+
+table tbody tr:last-child {
+    border-bottom: none;
+}
+
+table tbody td {
+    padding: 1rem;
+    color: #1f2937;
+    font-size: 0.9rem;
+    border: none;
+    vertical-align: middle;
+}
+
+table tbody td:first-child {
+    font-weight: 600;
+    color: #1e40af;
+}
+
+/* ============================================================================
+   BADGES DE STATUS
+   ============================================================================ */
+
+.badge {
+    display: inline-block;
+    padding: 0.35rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+}
+
+.badge-pendente {
+    background-color: #fef3c7;
+    color: #92400e;
+    border: 1px solid #fcd34d;
+}
+
+.badge-pago {
+    background-color: #d1fae5;
+    color: #065f46;
+    border: 1px solid #6ee7b7;
+}
+
+.badge-vencido {
+    background-color: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fca5a5;
+}
+
+.badge-cancelado {
+    background-color: #e5e7eb;
+    color: #374151;
+    border: 1px solid #d1d5db;
+}
+
+.badge-confirmado {
+    background-color: #dbeafe;
+    color: #1e40af;
+    border: 1px solid #93c5fd;
+}
+
+.badge-em_andamento {
+    background-color: #dbeafe;
+    color: #1e40af;
+    border: 1px solid #93c5fd;
+}
+
+.badge-concluida {
+    background-color: #d1fae5;
+    color: #065f46;
+    border: 1px solid #6ee7b7;
+}
+
+.badge-ativo {
+    background-color: #d1fae5;
+    color: #065f46;
+    border: 1px solid #6ee7b7;
+}
+
+.badge-inativo {
+    background-color: #e5e7eb;
+    color: #374151;
+    border: 1px solid #d1d5db;
+}
+
+/* ============================================================================
+   AÇÕES (BOTÕES)
+   ============================================================================ */
+
+.actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn-primary {
+    background-color: #1e40af;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #1e3a8a;
+}
+
+.btn-success {
+    background-color: #16a34a;
+    color: white;
+}
+
+.btn-success:hover {
+    background-color: #15803d;
+}
+
+.btn-danger {
+    background-color: #dc2626;
+    color: white;
+}
+
+.btn-danger:hover {
+    background-color: #b91c1c;
+}
+
+.btn-warning {
+    background-color: #f59e0b;
+    color: white;
+}
+
+.btn-warning:hover {
+    background-color: #d97706;
+}
+
+.btn-info {
+    background-color: #0891b2;
+    color: white;
+}
+
+.btn-info:hover {
+    background-color: #0e7490;
+}
+
+.btn-secondary {
+    background-color: #6b7280;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: #4b5563;
+}
+
+.btn-sm {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.65rem;
+}
+
+.btn-xs {
+    padding: 0.2rem 0.4rem;
+    font-size: 0.6rem;
+}
+
+/* ============================================================================
+   FILTROS
+   ============================================================================ */
+
+.filter-container {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.filter-container select,
+.filter-container input {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    background-color: white;
+    color: #1f2937;
+    transition: all 0.3s ease;
+}
+
+.filter-container select:focus,
+.filter-container input:focus {
+    outline: none;
+    border-color: #1e40af;
+    box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
+}
+
+/* ============================================================================
+   CARDS DE TOTAIS
+   ============================================================================ */
+
+.totals-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.total-card {
+    padding: 1.25rem;
+    border-radius: 8px;
+    border-left: 4px solid;
+    background-color: white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+.total-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.total-card-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.5rem;
+}
+
+.total-card-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+}
+
+.total-card-pending {
+    border-left-color: #f59e0b;
+    background-color: #fffbeb;
+}
+
+.total-card-pending .total-card-label {
+    color: #b45309;
+}
+
+.total-card-pending .total-card-value {
+    color: #b45309;
+}
+
+.total-card-paid {
+    border-left-color: #10b981;
+    background-color: #ecfdf5;
+}
+
+.total-card-paid .total-card-label {
+    color: #065f46;
+}
+
+.total-card-paid .total-card-value {
+    color: #065f46;
+}
+
+.total-card-overdue {
+    border-left-color: #ef4444;
+    background-color: #fef2f2;
+}
+
+.total-card-overdue .total-card-label {
+    color: #991b1b;
+}
+
+.total-card-overdue .total-card-value {
+    color: #991b1b;
+}
+
+/* ============================================================================
+   RESPONSIVIDADE - TABLET (768px - 1024px)
+   ============================================================================ */
+
+@media (max-width: 1024px) {
+    table thead th {
+        padding: 0.75rem;
+        font-size: 0.75rem;
+    }
+    
+    table tbody td {
+        padding: 0.75rem;
+        font-size: 0.85rem;
+    }
+    
+    .actions {
+        gap: 0.35rem;
+    }
+    
+    .btn {
+        padding: 0.35rem 0.6rem;
+        font-size: 0.7rem;
+    }
+    
+    .totals-container {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+    }
+    
+    .total-card {
+        padding: 1rem;
+    }
+    
+    .total-card-value {
+        font-size: 1.5rem;
+    }
+}
+
+/* ============================================================================
+   RESPONSIVIDADE - MOBILE (576px - 768px)
+   ============================================================================ */
+
+@media (max-width: 768px) {
+    .table-container {
+        border-radius: 8px;
+        margin-bottom: 1rem;
+    }
+    
+    table thead th {
+        padding: 0.6rem;
+        font-size: 0.65rem;
+    }
+    
+    table tbody td {
+        padding: 0.6rem;
+        font-size: 0.8rem;
+    }
+    
+    .actions {
+        gap: 0.25rem;
+        flex-direction: column;
+    }
+    
+    .btn {
+        padding: 0.3rem 0.5rem;
+        font-size: 0.65rem;
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .badge {
+        font-size: 0.65rem;
+        padding: 0.25rem 0.5rem;
+    }
+    
+    .totals-container {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    .total-card {
+        padding: 0.75rem;
+    }
+    
+    .total-card-label {
+        font-size: 0.75rem;
+    }
+    
+    .total-card-value {
+        font-size: 1.25rem;
+    }
+    
+    .filter-container {
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    .filter-container select,
+    .filter-container input {
+        padding: 0.4rem 0.6rem;
+        font-size: 0.8rem;
+        flex: 1;
+        min-width: 120px;
+    }
+}
+
+/* ============================================================================
+   RESPONSIVIDADE - SMARTPHONE (<576px)
+   ============================================================================ */
+
+@media (max-width: 576px) {
+    .table-container {
+        border-radius: 6px;
+        margin-bottom: 0.75rem;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+    
+    table {
+        font-size: 0.75rem;
+    }
+    
+    table thead th {
+        padding: 0.5rem;
+        font-size: 0.6rem;
+    }
+    
+    table tbody td {
+        padding: 0.5rem;
+        font-size: 0.75rem;
+    }
+    
+    table tbody td:first-child {
+        font-size: 0.8rem;
+    }
+    
+    .actions {
+        gap: 0.2rem;
+        flex-direction: column;
+    }
+    
+    .btn {
+        padding: 0.25rem 0.4rem;
+        font-size: 0.6rem;
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .btn-sm {
+        padding: 0.2rem 0.3rem;
+        font-size: 0.55rem;
+    }
+    
+    .badge {
+        font-size: 0.55rem;
+        padding: 0.2rem 0.4rem;
+    }
+    
+    .totals-container {
+        grid-template-columns: 1fr;
+        gap: 0.4rem;
+        margin-bottom: 0.75rem;
+    }
+    
+    .total-card {
+        padding: 0.6rem;
+    }
+    
+    .total-card-label {
+        font-size: 0.65rem;
+        margin-bottom: 0.25rem;
+    }
+    
+    .total-card-value {
+        font-size: 1rem;
+    }
+    
+    .filter-container {
+        gap: 0.4rem;
+        margin-bottom: 0.75rem;
+        flex-direction: column;
+    }
+    
+    .filter-container select,
+    .filter-container input {
+        padding: 0.35rem 0.5rem;
+        font-size: 0.75rem;
+        width: 100%;
+    }
+    
+    .filter-container button {
+        width: 100%;
+    }
+}
+
+/* ============================================================================
+   EXTRA SMALL (<320px)
+   ============================================================================ */
+
+@media (max-width: 320px) {
+    table thead th {
+        padding: 0.4rem;
+        font-size: 0.55rem;
+    }
+    
+    table tbody td {
+        padding: 0.4rem;
+        font-size: 0.7rem;
+    }
+    
+    .btn {
+        padding: 0.2rem 0.3rem;
+        font-size: 0.55rem;
+    }
+    
+    .badge {
+        font-size: 0.5rem;
+        padding: 0.15rem 0.3rem;
+    }
+    
+    .total-card-value {
+        font-size: 0.9rem;
+    }
+}
+
+/* ============================================================================
+   UTILITÁRIOS
+   ============================================================================ */
+
+.text-center {
+    text-align: center;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.text-muted {
+    color: #64748b;
+}
+
+.font-bold {
+    font-weight: 700;
+}
+
+.font-mono {
+    font-family: 'Courier New', monospace;
+}
+
+.truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* ============================================================================
+   ANIMAÇÕES
+   ============================================================================ */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+table tbody tr {
+    animation: fadeIn 0.3s ease forwards;
+}
+
+table tbody tr:nth-child(1) { animation-delay: 0.05s; }
+table tbody tr:nth-child(2) { animation-delay: 0.1s; }
+table tbody tr:nth-child(3) { animation-delay: 0.15s; }
+table tbody tr:nth-child(4) { animation-delay: 0.2s; }
+table tbody tr:nth-child(5) { animation-delay: 0.25s; }
+
+/* ============================================================================
+   IMPRESSÃO
+   ============================================================================ */
+
+@media print {
+    .filter-container,
+    .actions,
+    .btn {
+        display: none !important;
+    }
+    
+    table {
+        page-break-inside: avoid;
+    }
+    
+    table tbody tr {
+        page-break-inside: avoid;
+    }
+    
+    .table-container {
+        box-shadow: none;
+        border: 1px solid #ccc;
+    }
+}

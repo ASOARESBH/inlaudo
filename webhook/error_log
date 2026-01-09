@@ -1,0 +1,5 @@
+[05-Jan-2026 14:25:47 America/Sao_Paulo] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'inlaud99_erpinlaudo.webhooks' doesn't exist in /home2/inlaud99/erp.inlaudo.com.br/webhook/webhook_mercadopago.php:30
+Stack trace:
+#0 /home2/inlaud99/erp.inlaudo.com.br/webhook/webhook_mercadopago.php(30): PDO->prepare('\n    INSERT INT...')
+#1 {main}
+  thrown in /home2/inlaud99/erp.inlaudo.com.br/webhook/webhook_mercadopago.php on line 30
