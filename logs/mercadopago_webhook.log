@@ -1,4 +1,0 @@
-[2025-12-28 21:37:44] Payload recebido: 
-[2025-12-28 21:37:44] Payload inválido
-[2025-12-28 21:38:01] Payload recebido: {"action":"payment.updated","api_version":"v1","data":{"id":"123456"},"date_created":"2021-11-01T02:02:02Z","id":"123456","live_mode":false,"type":"payment","user_id":3088033916}
-[2025-12-28 21:38:01] Pagamento 123456 status: 404
