@@ -37,6 +37,7 @@ if (!isset($pageTitle)) {
     <!-- Dashboard CSS -->
     <link rel="stylesheet" href="assets/css/dashboard.css">
     <link rel="stylesheet" href="assets/css/responsive.css">
+    <link rel="stylesheet" href="assets/css/tabelas_profissional.css">
     
     <style>
         :root {
