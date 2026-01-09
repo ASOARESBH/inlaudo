@@ -4,7 +4,11 @@
  * URL: https://erp.inlaudo.com.br/
  * 
  * Dashboard integrado com Bootstrap 5, gráficos e design responsivo
- * Mantém todas as referências de páginas do sistema
+ * VERSÃO 2.0 - Com integração completa ao banco de dados
+ * 
+ * @author ERP INLAUDO
+ * @version 2.0.0
+ * @date 2026-01-09
  */
 
 session_start();
@@ -16,83 +20,58 @@ if (!isset($_SESSION['usuario_id'])) {
 }
 
 require_once 'config.php';
+require_once 'src/models/DashboardModel.php';
 
 $pageTitle = 'Dashboard';
-$conn = getConnection();
 
 try {
+    $conn = getConnection();
+    $dashboardModel = new DashboardModel($conn);
+    
     // ============================================================================
-    // BUSCAR ESTATÍSTICAS
+    // BUSCAR ESTATÍSTICAS REAIS DO BANCO DE DADOS
     // ============================================================================
     
-    // Total de clientes
-    $stmt = $conn->query("SELECT COUNT(*) as total FROM clientes WHERE tipo_cliente = 'CLIENTE' LIMIT 1");
-    $totalClientes = $stmt->fetch()['total'] ?? 0;
+    // Total de clientes ativos
+    $totalClientes = $dashboardModel->getTotalClientesAtivos();
     
-    // Total de leads
-    $stmt = $conn->query("SELECT COUNT(*) as total FROM clientes WHERE tipo_cliente = 'LEAD' LIMIT 1");
-    $totalLeads = $stmt->fetch()['total'] ?? 0;
+    // Total de leads (novos clientes nos últimos 30 dias)
+    $totalLeads = $dashboardModel->getTotalLeads();
     
-    // Receita mensal
-    $stmt = $conn->query("SELECT SUM(valor) as total FROM contas_receber WHERE MONTH(data_vencimento) = MONTH(NOW()) AND YEAR(data_vencimento) = YEAR(NOW()) AND status IN ('pendente', 'confirmado') LIMIT 1");
-    $receitaMensal = $stmt->fetch()['total'] ?? 0;
+    // Receita mensal (contas pagas no mês atual)
+    $receitaMensal = $dashboardModel->getReceitaMensal();
     
     // Contas a receber pendentes
-    $stmt = $conn->query("SELECT COUNT(*) as total, SUM(valor) as valor_total FROM contas_receber WHERE status IN ('pendente', 'confirmado') LIMIT 1");
-    $contasReceber = $stmt->fetch();
+    $contasReceber = $dashboardModel->getContasReceber();
     
     // Contas a pagar pendentes
-    $stmt = $conn->query("SELECT COUNT(*) as total, SUM(valor) as valor_total FROM contas_pagar WHERE status IN ('pendente', 'confirmado') LIMIT 1");
-    $contasPagar = $stmt->fetch();
-    
-    // Próximas interações (próximos 7 dias)
-    $dataLimite = date('Y-m-d H:i:s', strtotime('+7 days'));
-    $stmt = $conn->prepare("SELECT COUNT(*) as total FROM interacoes WHERE proximo_contato_data <= ? AND proximo_contato_data >= NOW() LIMIT 1");
-    $stmt->execute([$dataLimite]);
-    $proximasInteracoes = $stmt->fetch()['total'] ?? 0;
+    $contasPagar = $dashboardModel->getContasPagar();
     
     // Contas vencidas
-    $stmt = $conn->query("SELECT COUNT(*) as total FROM contas_receber WHERE status = 'vencido' LIMIT 1");
-    $contasVencidas = $stmt->fetch()['total'] ?? 0;
+    $contasVencidas = $dashboardModel->getContasVencidas();
     
     // Fluxo de Caixa (últimos 10 meses)
-    $stmt = $conn->query("
-        SELECT DATE_FORMAT(data_vencimento, '%b/%y') as mes, 
-               SUM(CASE WHEN tipo = 'entrada' THEN valor ELSE 0 END) as entradas,
-               SUM(CASE WHEN tipo = 'saida' THEN valor ELSE 0 END) as saidas
-        FROM fluxo_caixa 
-        WHERE data_vencimento >= DATE_SUB(NOW(), INTERVAL 10 MONTH)
-        GROUP BY DATE_FORMAT(data_vencimento, '%Y-%m')
-        ORDER BY data_vencimento
-        LIMIT 10
-    ");
-    $fluxoDados = $stmt->fetchAll() ?? [];
+    $fluxoDados = $dashboardModel->getFluxoCaixa();
     
     // Contas por Status
-    $stmt = $conn->query("SELECT status, COUNT(*) as total FROM contas_receber GROUP BY status LIMIT 10");
-    $contasStatus = $stmt->fetchAll() ?? [];
+    $contasStatus = $dashboardModel->getContasPorStatus();
     
-    // Últimas interações
-    $stmt = $conn->query("
-        SELECT c.nome as cliente, i.tipo, i.data_criacao, i.status 
-        FROM interacoes i
-        JOIN clientes c ON i.cliente_id = c.id
-        ORDER BY i.data_criacao DESC LIMIT 5
-    ");
-    $ultimasInteracoes = $stmt->fetchAll() ?? [];
+    // Últimas contas a receber
+    $ultimasContas = $dashboardModel->getUltimasContasReceber(5);
     
 } catch (Exception $e) {
     error_log("Erro ao carregar dashboard: " . $e->getMessage());
+    
+    // Valores padrão em caso de erro
     $totalClientes = 0;
     $totalLeads = 0;
     $receitaMensal = 0;
     $contasReceber = ['total' => 0, 'valor_total' => 0];
     $contasPagar = ['total' => 0, 'valor_total' => 0];
-    $proximasInteracoes = 0;
     $contasVencidas = 0;
     $fluxoDados = [];
     $contasStatus = [];
-    $ultimasInteracoes = [];
+    $ultimasContas = [];
 }
 
 include 'header.php';
@@ -102,6 +81,7 @@ include 'header.php';
     
     <!-- KPI Cards Row -->
     <div class="row mb-4">
+        <!-- Card: Clientes Ativos -->
         <div class="col-lg-2 col-md-4 col-sm-6 col-6 mb-3">
             <div class="card">
                 <div class="card-body">
@@ -111,7 +91,7 @@ include 'header.php';
                         </div>
                         <div>
                             <div style="font-size: 0.8rem; color: #64748b; font-weight: 600; text-transform: uppercase;">Clientes</div>
-                            <div style="font-size: 1.75rem; font-weight: 700; color: #1f2937;"><?php echo $totalClientes; ?></div>
+                            <div style="font-size: 1.75rem; font-weight: 700; color: #1f2937;"><?php echo number_format($totalClientes, 0, ',', '.'); ?></div>
                             <div style="font-size: 0.8rem; color: #16a34a; font-weight: 600;"><i class="fas fa-arrow-up"></i> Ativos</div>
                         </div>
                     </div>
@@ -119,6 +99,7 @@ include 'header.php';
             </div>
         </div>
         
+        <!-- Card: Leads Novos -->
         <div class="col-lg-2 col-md-4 col-sm-6 col-6 mb-3">
             <div class="card">
                 <div class="card-body">
@@ -128,7 +109,7 @@ include 'header.php';
                         </div>
                         <div>
                             <div style="font-size: 0.8rem; color: #64748b; font-weight: 600; text-transform: uppercase;">Leads</div>
-                            <div style="font-size: 1.75rem; font-weight: 700; color: #1f2937;"><?php echo $totalLeads; ?></div>
+                            <div style="font-size: 1.75rem; font-weight: 700; color: #1f2937;"><?php echo number_format($totalLeads, 0, ',', '.'); ?></div>
                             <div style="font-size: 0.8rem; color: #16a34a; font-weight: 600;"><i class="fas fa-arrow-up"></i> Novos</div>
                         </div>
                     </div>
@@ -136,6 +117,7 @@ include 'header.php';
             </div>
         </div>
         
+        <!-- Card: Receita do Mês -->
         <div class="col-lg-2 col-md-4 col-sm-6 col-6 mb-3">
             <div class="card">
                 <div class="card-body">
@@ -145,7 +127,7 @@ include 'header.php';
                         </div>
                         <div>
                             <div style="font-size: 0.8rem; color: #64748b; font-weight: 600; text-transform: uppercase;">Receita</div>
-                            <div style="font-size: 1.3rem; font-weight: 700; color: #1f2937;">R$ <?php echo number_format($receitaMensal, 0, ',', '.'); ?></div>
+                            <div style="font-size: 1.3rem; font-weight: 700; color: #1f2937;">R$ <?php echo number_format($receitaMensal, 2, ',', '.'); ?></div>
                             <div style="font-size: 0.8rem; color: #16a34a; font-weight: 600;"><i class="fas fa-arrow-up"></i> Este mês</div>
                         </div>
                     </div>
@@ -153,6 +135,7 @@ include 'header.php';
             </div>
         </div>
         
+        <!-- Card: A Receber -->
         <div class="col-lg-2 col-md-4 col-sm-6 col-6 mb-3">
             <div class="card">
                 <div class="card-body">
@@ -162,7 +145,7 @@ include 'header.php';
                         </div>
                         <div>
                             <div style="font-size: 0.8rem; color: #64748b; font-weight: 600; text-transform: uppercase;">A Receber</div>
-                            <div style="font-size: 1.75rem; font-weight: 700; color: #1f2937;"><?php echo $contasReceber['total'] ?? 0; ?></div>
+                            <div style="font-size: 1.75rem; font-weight: 700; color: #1f2937;"><?php echo number_format($contasReceber['total'], 0, ',', '.'); ?></div>
                             <div style="font-size: 0.8rem; color: #16a34a; font-weight: 600;"><i class="fas fa-arrow-up"></i> Pendentes</div>
                         </div>
                     </div>
@@ -170,6 +153,7 @@ include 'header.php';
             </div>
         </div>
         
+        <!-- Card: A Pagar -->
         <div class="col-lg-2 col-md-4 col-sm-6 col-6 mb-3">
             <div class="card">
                 <div class="card-body">
@@ -179,7 +163,7 @@ include 'header.php';
                         </div>
                         <div>
                             <div style="font-size: 0.8rem; color: #64748b; font-weight: 600; text-transform: uppercase;">A Pagar</div>
-                            <div style="font-size: 1.75rem; font-weight: 700; color: #1f2937;"><?php echo $contasPagar['total'] ?? 0; ?></div>
+                            <div style="font-size: 1.75rem; font-weight: 700; color: #1f2937;"><?php echo number_format($contasPagar['total'], 0, ',', '.'); ?></div>
                             <div style="font-size: 0.8rem; color: #dc2626; font-weight: 600;"><i class="fas fa-arrow-down"></i> Pendentes</div>
                         </div>
                     </div>
@@ -187,6 +171,7 @@ include 'header.php';
             </div>
         </div>
         
+        <!-- Card: Vencidas -->
         <div class="col-lg-2 col-md-4 col-sm-6 col-6 mb-3">
             <div class="card">
                 <div class="card-body">
@@ -196,7 +181,7 @@ include 'header.php';
                         </div>
                         <div>
                             <div style="font-size: 0.8rem; color: #64748b; font-weight: 600; text-transform: uppercase;">Vencidas</div>
-                            <div style="font-size: 1.75rem; font-weight: 700; color: #1f2937;"><?php echo $contasVencidas; ?></div>
+                            <div style="font-size: 1.75rem; font-weight: 700; color: #1f2937;"><?php echo number_format($contasVencidas, 0, ',', '.'); ?></div>
                             <div style="font-size: 0.8rem; color: #dc2626; font-weight: 600;"><i class="fas fa-arrow-down"></i> Atenção</div>
                         </div>
                     </div>
@@ -232,44 +217,68 @@ include 'header.php';
         </div>
     </div>
     
-    <!-- Últimas Interações -->
+    <!-- Últimas Contas a Receber -->
     <div class="row mb-4">
         <div class="col-12">
             <div class="card">
                 <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
-                    <h5 style="margin: 0;"><i class="fas fa-history" style="color: #3b82f6; margin-right: 0.5rem;"></i>Últimas Interações</h5>
-                    <a href="interacoes.php" style="color: #3b82f6; text-decoration: none; font-weight: 600;">Ver todas ></a>
+                    <h5 style="margin: 0;"><i class="fas fa-history" style="color: #3b82f6; margin-right: 0.5rem;"></i>Últimas Contas a Receber</h5>
+                    <a href="contas_receber.php" style="color: #3b82f6; text-decoration: none; font-weight: 600;">Ver todas ></a>
                 </div>
                 <div class="card-body">
                     <div style="overflow-x: auto;">
                         <table class="table">
                             <thead>
                                 <tr>
+                                    <th>ID</th>
                                     <th>Cliente</th>
-                                    <th>Tipo</th>
-                                    <th>Data</th>
+                                    <th>Descrição</th>
+                                    <th>Valor</th>
+                                    <th>Vencimento</th>
                                     <th>Status</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php if (empty($ultimasInteracoes)): ?>
+                                <?php if (empty($ultimasContas)): ?>
                                     <tr>
-                                        <td colspan="4" style="text-align: center; color: #64748b; padding: 2rem;">
-                                            Nenhuma interação registrada
+                                        <td colspan="6" style="text-align: center; color: #64748b; padding: 2rem;">
+                                            Nenhuma conta registrada
                                         </td>
                                     </tr>
                                 <?php else: ?>
-                                    <?php foreach ($ultimasInteracoes as $interacao): ?>
+                                    <?php foreach ($ultimasContas as $conta): ?>
                                         <tr>
-                                            <td><?php echo htmlspecialchars(substr($interacao['cliente'] ?? 'N/A', 0, 30)); ?></td>
+                                            <td><?php echo htmlspecialchars($conta['id']); ?></td>
+                                            <td><?php echo htmlspecialchars(substr($conta['cliente_nome'] ?? 'N/A', 0, 30)); ?></td>
+                                            <td><?php echo htmlspecialchars(substr($conta['descricao'] ?? 'N/A', 0, 40)); ?></td>
+                                            <td>R$ <?php echo number_format($conta['valor'], 2, ',', '.'); ?></td>
+                                            <td><?php echo date('d/m/Y', strtotime($conta['data_vencimento'])); ?></td>
                                             <td>
-                                                <i class="fas fa-<?php echo $interacao['tipo'] === 'ligacao' ? 'phone' : ($interacao['tipo'] === 'email' ? 'envelope' : 'comments'); ?>" style="margin-right: 0.5rem;"></i>
-                                                <?php echo ucfirst($interacao['tipo'] ?? 'N/A'); ?>
-                                            </td>
-                                            <td><?php echo date('d/m H:i', strtotime($interacao['data_criacao'])); ?></td>
-                                            <td>
-                                                <span class="badge bg-<?php echo $interacao['status'] === 'concluida' ? 'success' : ($interacao['status'] === 'pendente' ? 'warning' : 'info'); ?>">
-                                                    <?php echo ucfirst($interacao['status'] ?? 'N/A'); ?>
+                                                <?php
+                                                $statusClass = 'secondary';
+                                                $statusText = 'Indefinido';
+                                                
+                                                switch($conta['status']) {
+                                                    case 'pago':
+                                                        $statusClass = 'success';
+                                                        $statusText = 'Pago';
+                                                        break;
+                                                    case 'pendente':
+                                                        $statusClass = 'warning';
+                                                        $statusText = 'Pendente';
+                                                        break;
+                                                    case 'vencido':
+                                                        $statusClass = 'danger';
+                                                        $statusText = 'Vencido';
+                                                        break;
+                                                    case 'cancelado':
+                                                        $statusClass = 'secondary';
+                                                        $statusText = 'Cancelado';
+                                                        break;
+                                                }
+                                                ?>
+                                                <span class="badge bg-<?php echo $statusClass; ?>">
+                                                    <?php echo $statusText; ?>
                                                 </span>
                                             </td>
                                         </tr>
@@ -295,9 +304,6 @@ include 'header.php';
                         <a href="clientes.php" class="btn btn-primary">
                             <i class="fas fa-users"></i> Clientes
                         </a>
-                        <a href="interacoes.php" class="btn btn-primary">
-                            <i class="fas fa-comments"></i> Interações
-                        </a>
                         <a href="contas_receber.php" class="btn btn-success">
                             <i class="fas fa-money-bill"></i> A Receber
                         </a>
@@ -309,6 +315,9 @@ include 'header.php';
                         </a>
                         <a href="relatorios.php" class="btn btn-warning">
                             <i class="fas fa-chart-bar"></i> Relatórios
+                        </a>
+                        <a href="configuracoes.php" class="btn btn-secondary">
+                            <i class="fas fa-cog"></i> Configurações
                         </a>
                     </div>
                 </div>
@@ -322,17 +331,20 @@ include 'header.php';
     const fluxoDados = <?php echo json_encode($fluxoDados ?? []); ?>;
     const contasStatusDados = <?php echo json_encode($contasStatus ?? []); ?>;
     
+    console.log('Fluxo de Caixa:', fluxoDados);
+    console.log('Status das Contas:', contasStatusDados);
+    
     // Gráfico Fluxo de Caixa
     if (document.getElementById('fluxoCaixaChart')) {
         const ctxFluxo = document.getElementById('fluxoCaixaChart').getContext('2d');
         new Chart(ctxFluxo, {
             type: 'line',
             data: {
-                labels: fluxoDados.map(d => d.mes),
+                labels: fluxoDados.map(d => d.mes_formatado || 'N/A'),
                 datasets: [
                     {
                         label: 'Entradas',
-                        data: fluxoDados.map(d => d.entradas || 0),
+                        data: fluxoDados.map(d => parseFloat(d.entradas) || 0),
                         borderColor: '#16a34a',
                         backgroundColor: 'rgba(22, 163, 74, 0.1)',
                         borderWidth: 2,
@@ -346,7 +358,7 @@ include 'header.php';
                     },
                     {
                         label: 'Saídas',
-                        data: fluxoDados.map(d => d.saidas || 0),
+                        data: fluxoDados.map(d => parseFloat(d.saidas) || 0),
                         borderColor: '#dc2626',
                         backgroundColor: 'rgba(220, 38, 38, 0.1)',
                         borderWidth: 2,
@@ -397,28 +409,28 @@ include 'header.php';
     // Gráfico Contas por Status
     if (document.getElementById('contasStatusChart')) {
         const ctxStatus = document.getElementById('contasStatusChart').getContext('2d');
+        
+        const statusMap = {
+            'pendente': 'Pendentes',
+            'pago': 'Pagas',
+            'vencido': 'Vencidas',
+            'cancelado': 'Canceladas'
+        };
+        
+        const colorMap = {
+            'pendente': '#f59e0b',
+            'pago': '#16a34a',
+            'vencido': '#dc2626',
+            'cancelado': '#64748b'
+        };
+        
         new Chart(ctxStatus, {
             type: 'doughnut',
             data: {
-                labels: contasStatusDados.map(d => {
-                    const statusMap = {
-                        'pendente': 'Pendentes',
-                        'confirmado': 'Confirmadas',
-                        'pago': 'Pagas',
-                        'cancelado': 'Canceladas',
-                        'vencido': 'Vencidas'
-                    };
-                    return statusMap[d.status] || d.status;
-                }),
+                labels: contasStatusDados.map(d => statusMap[d.status] || d.status),
                 datasets: [{
-                    data: contasStatusDados.map(d => d.total),
-                    backgroundColor: [
-                        '#3b82f6',
-                        '#16a34a',
-                        '#10b981',
-                        '#f59e0b',
-                        '#dc2626'
-                    ],
+                    data: contasStatusDados.map(d => parseInt(d.total) || 0),
+                    backgroundColor: contasStatusDados.map(d => colorMap[d.status] || '#3b82f6'),
                     borderColor: '#fff',
                     borderWidth: 2
                 }]
