@@ -461,7 +461,7 @@ foreach ($contas as $conta) {
                                 <td>
                                     <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
                                         <?php if ($conta['status'] == 'pendente'): ?>
-                                            <a href="cliente_pagar.php?id=<?php echo $conta['id']; ?>" 
+                                            <a href="processar_pagamento.php?conta_id=<?php echo $conta['id']; ?>" 
                                                class="btn btn-pay">
                                                 💳 Pagar
                                             </a>

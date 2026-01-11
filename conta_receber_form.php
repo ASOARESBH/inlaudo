@@ -44,6 +44,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $recorrencia = (int)$_POST['recorrencia'];
     $observacoes = sanitize($_POST['observacoes'] ?? '');
     
+    // Novos campos de gateways
+    $gatewayId = !empty($_POST['gateway_id']) ? (int)$_POST['gateway_id'] : null;
+    $gatewaysDisponiveis = !empty($_POST['gateways_disponiveis']) ? $_POST['gateways_disponiveis'] : null;
+    
     // Verificar se deve gerar boleto
     $gerarBoleto = isset($_POST['gerar_boleto']) && $_POST['gerar_boleto'] == '1' && $formaPagamento == 'boleto';
     $plataformaBoleto = isset($_POST['plataforma_boleto']) ? sanitize($_POST['plataforma_boleto']) : null;
@@ -57,12 +61,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Atualizar
             $sql = "UPDATE contas_receber SET 
                     cliente_id = ?, plano_contas_id = ?, descricao = ?, valor = ?,
-                    data_vencimento = ?, forma_pagamento = ?, recorrencia = ?, observacoes = ?
+                    data_vencimento = ?, forma_pagamento = ?, recorrencia = ?, observacoes = ?,
+                    gateway_id = ?, gateways_disponiveis = ?
                     WHERE id = ?";
             $stmt = $conn->prepare($sql);
             $stmt->execute([
                 $clienteId, $planoContasId, $descricao, $valor,
-                $dataVencimento, $formaPagamento, $recorrencia, $observacoes, $contaId
+                $dataVencimento, $formaPagamento, $recorrencia, $observacoes,
+                $gatewayId, $gatewaysDisponiveis, $contaId
             ]);
             
             // Processar uploads de anexos
@@ -422,51 +428,15 @@ include 'header.php';
                 <small style="color: #6b7280;">Informe quantas vezes esta conta se repetirá. Para pagamento único, deixe 1.</small>
             </div>
             
-            <div id="opcoes_boleto" style="display: none; border: 2px solid #2563eb; padding: 1.5rem; border-radius: 8px; background: #eff6ff;">
-                <h3 style="color: #1e40af; margin-bottom: 1rem;">Opções de Geração de Boleto</h3>
-                
-                <div class="form-group">
-                    <label style="display: flex; align-items: center; gap: 0.5rem;">
-                        <input type="checkbox" name="gerar_boleto" id="gerar_boleto" value="1">
-                        <span>Gerar boleto automaticamente via API</span>
-                    </label>
-                </div>
-                
-                <div class="form-group" id="plataforma_boleto_group" style="display: none;">
-                    <label>Plataforma de Geração *</label>
-                    <select name="plataforma_boleto" id="plataforma_boleto">
-                        <option value="">Selecione...</option>
-                        <option value="stripe">Stripe</option>
-                        <option value="cora">CORA</option>
-                    </select>
-                    <small style="color: #6b7280;">Certifique-se de que a integração está ativa em Integrações > Boleto</small>
-                </div>
-            </div>
+            <!-- Componente de Seleção de Gateways -->
+            <div id="gateway-selector-container-conta"></div>
             
-            <div style="border: 2px solid #10b981; padding: 1.5rem; border-radius: 8px; background: #f0fdf4; margin-top: 1rem;">
-                <h3 style="color: #059669; margin-bottom: 1rem;">Faturamento Stripe (Recomendado)</h3>
-                
-                <div class="form-group">
-                    <label style="display: flex; align-items: center; gap: 0.5rem;">
-                        <input type="checkbox" name="gerar_fatura_stripe" id="gerar_fatura_stripe" value="1" checked>
-                        <span>Gerar fatura automaticamente no Stripe</span>
-                    </label>
-                    <small style="color: #6b7280; display: block; margin-top: 0.5rem;">
-                        O Stripe criará um customer (se não existir) e uma fatura completa com boleto ou cartão.
-                    </small>
-                </div>
-                
-                <div class="form-group" id="forma_pagamento_fatura_group">
-                    <label>Forma de Pagamento da Fatura *</label>
-                    <select name="forma_pagamento_fatura" id="forma_pagamento_fatura">
-                        <option value="boleto">Boleto</option>
-                        <option value="card">Cartão</option>
-                    </select>
-                    <small style="color: #6b7280;">Boleto: gera boleto bancário | Cartão: permite pagamento com cartão</small>
-                </div>
-            </div>
             <?php else: ?>
             <input type="hidden" name="recorrencia" value="<?php echo $conta['recorrencia']; ?>">
+            
+            <!-- Componente de Seleção de Gateways (Edição) -->
+            <div id="gateway-selector-container-conta"></div>
+            
             <?php endif; ?>
             
             <div class="form-group">
@@ -621,8 +591,38 @@ include 'header.php';
         });
     }
     
-    // Mostrar opções de boleto quando forma de pagamento for boleto
+    // Inicializar GatewaySelector
     document.addEventListener('DOMContentLoaded', function() {
+        fetch('api/gateways.php')
+            .then(res => res.json())
+            .then(response => {
+                if (response.success) {
+                    <?php if ($conta): ?>
+                    // Modo edição: carregar gateways salvos
+                    const gatewaysSalvos = <?php echo json_encode($conta['gateways_disponiveis'] ? json_decode($conta['gateways_disponiveis'], true) : []); ?>;
+                    const gatewayPreferencial = <?php echo $conta['gateway_id'] ?? 'null'; ?>;
+                    <?php else: ?>
+                    // Modo criação: todos selecionados por padrão
+                    const gatewaysSalvos = response.data.map(g => g.id);
+                    const gatewayPreferencial = response.data[0]?.id || null;
+                    <?php endif; ?>
+                    
+                    new GatewaySelector('gateway-selector-container-conta', {
+                        gateways: response.data,
+                        selected: gatewaysSalvos,
+                        preferencial: gatewayPreferencial,
+                        onChange: (selection) => {
+                            console.log('Gateways selecionados:', selection);
+                        }
+                    });
+                } else {
+                    console.error('Erro ao carregar gateways:', response.error);
+                }
+            })
+            .catch(error => {
+                console.error('Erro na requisição:', error);
+            });
+        
         const formaPagamento = document.querySelector('select[name="forma_pagamento"]');
         const opcoesBoleto = document.getElementById('opcoes_boleto');
         const gerarBoleto = document.getElementById('gerar_boleto');

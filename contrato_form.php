@@ -30,7 +30,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $descricao = sanitize($_POST['descricao']);
     $valorTotal = (float)str_replace(',', '.', str_replace('.', '', $_POST['valor_total']));
     $formaPagamento = sanitize($_POST['forma_pagamento']);
-    $gatewayPagamento = sanitize($_POST['gateway_pagamento'] ?? 'cora');
+    
+    // Novos campos de gateways
+    $gatewayId = !empty($_POST['gateway_id']) ? (int)$_POST['gateway_id'] : null;
+    $gatewaysDisponiveis = !empty($_POST['gateways_disponiveis']) ? $_POST['gateways_disponiveis'] : null;
+    
     $recorrencia = (int)$_POST['recorrencia'];
     $status = sanitize($_POST['status']);
     $dataInicio = !empty($_POST['data_inicio']) ? $_POST['data_inicio'] : null;
@@ -65,12 +69,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Atualizar
             $sql = "UPDATE contratos SET 
                     cliente_id = ?, tipo = ?, descricao = ?, valor_total = ?,
-                    forma_pagamento = ?, gateway_pagamento = ?, recorrencia = ?, status = ?, data_inicio = ?,
+                    forma_pagamento = ?, gateway_id = ?, gateways_disponiveis = ?, recorrencia = ?, status = ?, data_inicio = ?,
                     data_fim = ?, observacoes = ?, arquivo_contrato = ?
                     WHERE id = ?";
             $stmt = $conn->prepare($sql);
             $stmt->execute([
-                $clienteId, $tipo, $descricao, $valorTotal, $formaPagamento, $gatewayPagamento,
+                $clienteId, $tipo, $descricao, $valorTotal, $formaPagamento, $gatewayId, $gatewaysDisponiveis,
                 $recorrencia, $status, $dataInicio, $dataFim, $observacoes,
                 $arquivoContrato, $contratoId
             ]);
@@ -78,12 +82,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         } else {
             // Inserir
             $sql = "INSERT INTO contratos (
-                    cliente_id, tipo, descricao, valor_total, forma_pagamento, gateway_pagamento,
+                    cliente_id, tipo, descricao, valor_total, forma_pagamento, gateway_id, gateways_disponiveis,
                     recorrencia, status, data_inicio, data_fim, observacoes, arquivo_contrato
                     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             $stmt = $conn->prepare($sql);
             $stmt->execute([
-                $clienteId, $tipo, $descricao, $valorTotal, $formaPagamento, $gatewayPagamento,
+                $clienteId, $tipo, $descricao, $valorTotal, $formaPagamento, $gatewayId, $gatewaysDisponiveis,
                 $recorrencia, $status, $dataInicio, $dataFim, $observacoes, $arquivoContrato
             ]);
             
@@ -203,17 +207,8 @@ include 'header.php';
                     </select>
                 </div>
                 
-                <div class="form-group" id="gateway_group" style="display: none;">
-                    <label>Gateway de Pagamento *</label>
-                    <select name="gateway_pagamento" id="gateway_pagamento">
-                        <option value="cora" <?php echo ($contrato && $contrato['gateway_pagamento'] == 'cora') ? 'selected' : ''; ?>>CORA (Boleto)</option>
-                        <option value="mercadopago" <?php echo ($contrato && $contrato['gateway_pagamento'] == 'mercadopago') ? 'selected' : ''; ?>>Mercado Pago</option>
-                        <option value="stripe" <?php echo ($contrato && $contrato['gateway_pagamento'] == 'stripe') ? 'selected' : ''; ?>>Stripe</option>
-                    </select>
-                    <small style="display: block; margin-top: 0.5rem; color: #64748b;">
-                        <span id="gateway_info">Selecione o gateway de pagamento</span>
-                    </small>
-                </div>
+                <!-- Componente de Seleção de Gateways -->
+                <div id="gateway-selector-container"></div>
                 
                 <div class="form-group">
                     <label>Recorrência (Parcelas) *</label>
@@ -267,34 +262,37 @@ include 'header.php';
 </div>
 
 <script>
-function atualizarGateway() {
-    const formaPagamento = document.getElementById('forma_pagamento').value;
-    const gatewayGroup = document.getElementById('gateway_group');
-    const gatewaySelect = document.getElementById('gateway_pagamento');
-    const gatewayInfo = document.getElementById('gateway_info');
-    
-    // Mostrar gateway apenas para boleto, cartão ou pix
-    const formasComGateway = ['boleto', 'cartao_credito', 'cartao_debito', 'pix'];
-    
-    if (formasComGateway.includes(formaPagamento)) {
-        gatewayGroup.style.display = 'block';
-        
-        // Configurar opções baseado na forma de pagamento
-        if (formaPagamento === 'boleto') {
-            gatewaySelect.value = 'cora';
-            gatewayInfo.textContent = 'CORA: Gera boleto registrado automaticamente';
-        } else {
-            gatewaySelect.value = 'mercadopago';
-            gatewayInfo.textContent = 'Mercado Pago: Aceita cartão, pix e boleto';
-        }
-    } else {
-        gatewayGroup.style.display = 'none';
-    }
-}
-
-// Executar ao carregar a página
+// Inicializar GatewaySelector
 document.addEventListener('DOMContentLoaded', function() {
-    atualizarGateway();
+    fetch('api/gateways.php')
+        .then(res => res.json())
+        .then(response => {
+            if (response.success) {
+                <?php if ($contrato): ?>
+                // Modo edição: carregar gateways salvos
+                const gatewaysSalvos = <?php echo json_encode($contrato['gateways_disponiveis'] ? json_decode($contrato['gateways_disponiveis'], true) : []); ?>;
+                const gatewayPreferencial = <?php echo $contrato['gateway_id'] ?? 'null'; ?>;
+                <?php else: ?>
+                // Modo criação: todos selecionados por padrão
+                const gatewaysSalvos = response.data.map(g => g.id);
+                const gatewayPreferencial = response.data[0]?.id || null;
+                <?php endif; ?>
+                
+                new GatewaySelector('gateway-selector-container', {
+                    gateways: response.data,
+                    selected: gatewaysSalvos,
+                    preferencial: gatewayPreferencial,
+                    onChange: (selection) => {
+                        console.log('Gateways selecionados:', selection);
+                    }
+                });
+            } else {
+                console.error('Erro ao carregar gateways:', response.error);
+            }
+        })
+        .catch(error => {
+            console.error('Erro na requisição:', error);
+        });
 });
 </script>
 
