@@ -252,15 +252,13 @@ include 'header.php';
             </div>
             
             <?php if (!$contrato): ?>
-            <div class="form-group">
-                <label style="display: flex; align-items: center; gap: 0.5rem;">
-                    <input type="checkbox" name="gerar_contas_receber" value="1" checked>
-                    <span>Gerar automaticamente contas a receber com base nas parcelas</span>
-                </label>
+            <div class="form-check">
+                <input type="checkbox" name="gerar_contas_receber" value="1" id="gerar_contas" checked>
+                <label for="gerar_contas">Gerar automaticamente contas a receber com base nas parcelas</label>
             </div>
             <?php endif; ?>
             
-            <div class="btn-group">
+            <div class="form-actions">
                 <button type="submit" class="btn btn-success">Salvar</button>
                 <a href="contratos.php" class="btn btn-secondary">Cancelar</a>
             </div>

@@ -538,7 +538,7 @@ include 'header.php';
                 <?php endif; ?>
             </div>
             
-            <div class="btn-group">
+            <div class="form-actions">
                 <button type="submit" class="btn btn-success">Salvar</button>
                 <a href="contas_receber.php" class="btn btn-secondary">Cancelar</a>
             </div>

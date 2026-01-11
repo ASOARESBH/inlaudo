@@ -157,7 +157,7 @@ include 'header.php';
                 <textarea name="observacoes" rows="4"><?php echo $conta ? htmlspecialchars($conta['observacoes']) : ''; ?></textarea>
             </div>
             
-            <div class="btn-group">
+            <div class="form-actions">
                 <button type="submit" class="btn btn-success">Salvar</button>
                 <a href="contas_pagar.php" class="btn btn-secondary">Cancelar</a>
             </div>

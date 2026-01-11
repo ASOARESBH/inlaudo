@@ -215,7 +215,7 @@ include 'header.php';
                 </div>
             </div>
             
-            <div class="btn-group">
+            <div class="form-actions">
                 <button type="submit" class="btn btn-success">Salvar</button>
                 <a href="clientes.php" class="btn btn-secondary">Cancelar</a>
             </div>

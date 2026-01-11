@@ -1,0 +1,307 @@
+/**
+ * CSS Profissional para Formulários - ERP Inlaudo
+ * Aplicável a todas as páginas de cadastro e edição
+ * Responsivo para desktop, tablet e mobile
+ * Versão: 1.0.0
+ */
+
+/* ============================================================================
+   VARIÁVEIS CSS
+   ============================================================================ */
+
+:root {
+    --form-primary: #1e40af;
+    --form-primary-hover: #1e3a8a;
+    --form-success: #16a34a;
+    --form-danger: #dc2626;
+    --form-warning: #f59e0b;
+    --form-border: #e2e8f0;
+    --form-bg: #ffffff;
+    --form-input-bg: #f8fafc;
+    --form-text: #1f2937;
+    --form-label: #374151;
+    --form-placeholder: #9ca3af;
+    --form-focus: #3b82f6;
+    --form-shadow: rgba(0, 0, 0, 0.05);
+    --form-shadow-focus: rgba(59, 130, 246, 0.25);
+}
+
+/* ============================================================================
+   CONTAINER E CARD
+   ============================================================================ */
+
+.container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1.5rem;
+}
+
+.card {
+    background: var(--form-bg);
+    border-radius: 12px;
+    box-shadow: 0 2px 8px var(--form-shadow);
+    overflow: hidden;
+}
+
+.card-header {
+    background: linear-gradient(135deg, var(--form-primary) 0%, var(--form-primary-hover) 100%);
+    padding: 1.5rem 2rem;
+    border-bottom: none;
+}
+
+.card-header h2 {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+/* ============================================================================
+   FORMULÁRIO
+   ============================================================================ */
+
+form {
+    padding: 2rem;
+}
+
+/* ============================================================================
+   FORM ROW (GRID DE CAMPOS)
+   ============================================================================ */
+
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+/* ============================================================================
+   FORM GROUP (GRUPO DE CAMPO)
+   ============================================================================ */
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    color: var(--form-label);
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+/* ============================================================================
+   INPUTS, SELECTS E TEXTAREAS
+   ============================================================================ */
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="tel"],
+.form-group input[type="number"],
+.form-group input[type="date"],
+.form-group input[type="time"],
+.form-group input[type="password"],
+.form-group input[type="url"],
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 0.95rem;
+    color: var(--form-text);
+    background-color: var(--form-input-bg);
+    border: 2px solid var(--form-border);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+.form-group input[type="file"] {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+    color: var(--form-text);
+    background-color: var(--form-input-bg);
+    border: 2px dashed var(--form-border);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.form-group input[type="file"]:hover {
+    border-color: var(--form-primary);
+    background-color: #eff6ff;
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+    line-height: 1.5;
+}
+
+/* Placeholder */
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: var(--form-placeholder);
+}
+
+/* Focus State */
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    background-color: white;
+    border-color: var(--form-focus);
+    box-shadow: 0 0 0 3px var(--form-shadow-focus);
+}
+
+/* Select com ícone */
+.form-group select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23374151' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 12px;
+    padding-right: 3rem;
+    cursor: pointer;
+}
+
+/* ============================================================================
+   CHECKBOX
+   ============================================================================ */
+
+.form-check {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    padding: 0.75rem;
+    background-color: var(--form-input-bg);
+    border-radius: 8px;
+}
+
+.form-check input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: var(--form-primary);
+}
+
+.form-check label {
+    margin: 0;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+/* ============================================================================
+   MENSAGENS E ALERTAS
+   ============================================================================ */
+
+.alert {
+    padding: 1rem 1.25rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    font-weight: 500;
+}
+
+.alert-success {
+    background-color: #d1fae5;
+    color: #065f46;
+    border-left: 4px solid #10b981;
+}
+
+.alert-error {
+    background-color: #fee2e2;
+    color: #991b1b;
+    border-left: 4px solid #ef4444;
+}
+
+/* ============================================================================
+   SMALL TEXT
+   ============================================================================ */
+
+.form-group small {
+    display: block;
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+    color: #64748b;
+}
+
+/* ============================================================================
+   BOTÕES
+   ============================================================================ */
+
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 2px solid var(--form-border);
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 2rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-decoration: none;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 4px var(--form-shadow);
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--form-primary) 0%, var(--form-primary-hover) 100%);
+    color: white;
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+    color: white;
+}
+
+.btn-secondary {
+    background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+    color: white;
+}
+
+/* ============================================================================
+   RESPONSIVIDADE - MOBILE
+   ============================================================================ */
+
+@media (max-width: 768px) {
+    .container {
+        margin: 1rem auto;
+        padding: 0 0.75rem;
+    }
+    
+    form {
+        padding: 1.25rem;
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .btn {
+        width: 100%;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+}
