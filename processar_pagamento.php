@@ -6,7 +6,7 @@
  * Exibe gateways disponíveis e redireciona para pagamento
  */
 
-session_start();
+require_once 'verifica_sessao_cliente.php';
 require_once 'config.php';
 require_once 'src/models/GatewayPagamentoModel.php';
 

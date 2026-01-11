@@ -88,39 +88,39 @@ COMMENT='Mapeamento de status dos gateways para status padronizado do ERP';
 -- 3. INSERIR MAPEAMENTOS DE STATUS PADRÃO
 -- ============================================================
 
--- Mercado Pago
+-- Mercado Pago (ID = 1)
 INSERT IGNORE INTO gateway_status_mapping (gateway_id, status_gateway, status_erp, descricao) VALUES
-((SELECT id FROM gateways_pagamento WHERE codigo = 'mercadopago'), 'pending', 'pendente', 'Aguardando pagamento'),
-((SELECT id FROM gateways_pagamento WHERE codigo = 'mercadopago'), 'in_process', 'processando', 'Pagamento em processamento'),
-((SELECT id FROM gateways_pagamento WHERE codigo = 'mercadopago'), 'approved', 'pago', 'Pagamento aprovado'),
-((SELECT id FROM gateways_pagamento WHERE codigo = 'mercadopago'), 'cancelled', 'cancelado', 'Pagamento cancelado'),
-((SELECT id FROM gateways_pagamento WHERE codigo = 'mercadopago'), 'refunded', 'estornado', 'Pagamento estornado'),
-((SELECT id FROM gateways_pagamento WHERE codigo = 'mercadopago'), 'rejected', 'erro', 'Pagamento rejeitado'),
-((SELECT id FROM gateways_pagamento WHERE codigo = 'mercadopago'), 'charged_back', 'estornado', 'Chargeback realizado');
+(1, 'pending', 'pendente', 'Aguardando pagamento'),
+(1, 'in_process', 'processando', 'Pagamento em processamento'),
+(1, 'approved', 'pago', 'Pagamento aprovado'),
+(1, 'cancelled', 'cancelado', 'Pagamento cancelado'),
+(1, 'refunded', 'estornado', 'Pagamento estornado'),
+(1, 'rejected', 'erro', 'Pagamento rejeitado'),
+(1, 'charged_back', 'estornado', 'Chargeback realizado');
 
--- Asaas
+-- Asaas (ID = 2)
 INSERT IGNORE INTO gateway_status_mapping (gateway_id, status_gateway, status_erp, descricao) VALUES
-((SELECT id FROM gateways_pagamento WHERE codigo = 'asaas'), 'PENDING', 'pendente', 'Aguardando pagamento'),
-((SELECT id FROM gateways_pagamento WHERE codigo = 'asaas'), 'RECEIVED', 'pago', 'Pagamento recebido'),
-((SELECT id FROM gateways_pagamento WHERE codigo = 'asaas'), 'CONFIRMED', 'pago', 'Pagamento confirmado'),
-((SELECT id FROM gateways_pagamento WHERE codigo = 'asaas'), 'OVERDUE', 'vencido', 'Pagamento vencido'),
-((SELECT id FROM gateways_pagamento WHERE codigo = 'asaas'), 'REFUNDED', 'estornado', 'Pagamento estornado'),
-((SELECT id FROM gateways_pagamento WHERE codigo = 'asaas'), 'RECEIVED_IN_CASH', 'pago', 'Recebido em dinheiro'),
-((SELECT id FROM gateways_pagamento WHERE codigo = 'asaas'), 'REFUND_REQUESTED', 'processando', 'Estorno solicitado'),
-((SELECT id FROM gateways_pagamento WHERE codigo = 'asaas'), 'CHARGEBACK_REQUESTED', 'processando', 'Chargeback solicitado'),
-((SELECT id FROM gateways_pagamento WHERE codigo = 'asaas'), 'CHARGEBACK_DISPUTE', 'processando', 'Disputa de chargeback'),
-((SELECT id FROM gateways_pagamento WHERE codigo = 'asaas'), 'AWAITING_CHARGEBACK_REVERSAL', 'processando', 'Aguardando reversão'),
-((SELECT id FROM gateways_pagamento WHERE codigo = 'asaas'), 'DUNNING_REQUESTED', 'processando', 'Cobrança solicitada'),
-((SELECT id FROM gateways_pagamento WHERE codigo = 'asaas'), 'DUNNING_RECEIVED', 'pago', 'Cobrança recebida'),
-((SELECT id FROM gateways_pagamento WHERE codigo = 'asaas'), 'AWAITING_RISK_ANALYSIS', 'processando', 'Aguardando análise de risco');
+(2, 'PENDING', 'pendente', 'Aguardando pagamento'),
+(2, 'RECEIVED', 'pago', 'Pagamento recebido'),
+(2, 'CONFIRMED', 'pago', 'Pagamento confirmado'),
+(2, 'OVERDUE', 'vencido', 'Pagamento vencido'),
+(2, 'REFUNDED', 'estornado', 'Pagamento estornado'),
+(2, 'RECEIVED_IN_CASH', 'pago', 'Recebido em dinheiro'),
+(2, 'REFUND_REQUESTED', 'processando', 'Estorno solicitado'),
+(2, 'CHARGEBACK_REQUESTED', 'processando', 'Chargeback solicitado'),
+(2, 'CHARGEBACK_DISPUTE', 'processando', 'Disputa de chargeback'),
+(2, 'AWAITING_CHARGEBACK_REVERSAL', 'processando', 'Aguardando reversão'),
+(2, 'DUNNING_REQUESTED', 'processando', 'Cobrança solicitada'),
+(2, 'DUNNING_RECEIVED', 'pago', 'Cobrança recebida'),
+(2, 'AWAITING_RISK_ANALYSIS', 'processando', 'Aguardando análise de risco');
 
--- Cora
+-- Cora (ID = 3)
 INSERT IGNORE INTO gateway_status_mapping (gateway_id, status_gateway, status_erp, descricao) VALUES
-((SELECT id FROM gateways_pagamento WHERE codigo = 'cora'), 'PENDING', 'pendente', 'Aguardando pagamento'),
-((SELECT id FROM gateways_pagamento WHERE codigo = 'cora'), 'PAID', 'pago', 'Pagamento confirmado'),
-((SELECT id FROM gateways_pagamento WHERE codigo = 'cora'), 'CANCELLED', 'cancelado', 'Pagamento cancelado'),
-((SELECT id FROM gateways_pagamento WHERE codigo = 'cora'), 'EXPIRED', 'vencido', 'Pagamento expirado'),
-((SELECT id FROM gateways_pagamento WHERE codigo = 'cora'), 'REFUNDED', 'estornado', 'Pagamento estornado');
+(3, 'PENDING', 'pendente', 'Aguardando pagamento'),
+(3, 'PAID', 'pago', 'Pagamento confirmado'),
+(3, 'CANCELLED', 'cancelado', 'Pagamento cancelado'),
+(3, 'EXPIRED', 'vencido', 'Pagamento expirado'),
+(3, 'REFUNDED', 'estornado', 'Pagamento estornado');
 
 -- ============================================================
 -- FIM DA MIGRATION 003

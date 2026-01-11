@@ -488,6 +488,10 @@ if (!isset($pageTitle)) {
             }
         }
     </style>
+    
+    <!-- Gateway Selector -->
+    <link rel="stylesheet" href="assets/css/gateway-selector.css">
+    <script src="assets/js/gateway-selector.js"></script>
 </head>
 <body>
     
