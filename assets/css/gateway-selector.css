@@ -1,0 +1,228 @@
+/**
+ * Gateway Selector - Estilos
+ * Versão: 2.3.0
+ */
+
+.gateway-selector {
+    margin: 20px 0;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+}
+
+.gateway-selector-header {
+    margin-bottom: 15px;
+}
+
+.gateway-selector-header .form-label {
+    font-size: 16px;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.gateway-selector-header .form-label i {
+    margin-right: 8px;
+    color: #3498db;
+}
+
+.gateway-selector-header small {
+    display: block;
+    margin-top: 5px;
+}
+
+.gateway-selector-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.gateway-item {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    background: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.gateway-item:hover {
+    border-color: #3498db;
+    box-shadow: 0 4px 8px rgba(52, 152, 219, 0.1);
+    transform: translateY(-2px);
+}
+
+.gateway-item.selected {
+    border-color: #3498db;
+    background: #e3f2fd;
+}
+
+.gateway-item.preferencial {
+    border-color: #2ecc71;
+    background: #d5f4e6;
+}
+
+.gateway-checkbox {
+    margin-right: 15px;
+}
+
+.gateway-checkbox input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.gateway-icon {
+    font-size: 32px;
+    margin-right: 15px;
+    min-width: 40px;
+    text-align: center;
+}
+
+.gateway-info {
+    flex: 1;
+}
+
+.gateway-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 5px;
+}
+
+.gateway-description {
+    font-size: 13px;
+    color: #7f8c8d;
+    margin-bottom: 5px;
+}
+
+.gateway-taxa {
+    font-size: 12px;
+    color: #e74c3c;
+    font-weight: 500;
+}
+
+.gateway-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.gateway-badge .badge {
+    font-size: 11px;
+    padding: 4px 8px;
+}
+
+.gateway-preferencial-selector {
+    margin-top: 20px;
+    padding: 15px;
+    background: white;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+}
+
+.gateway-preferencial-selector .form-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.gateway-preferencial-selector .form-label i {
+    margin-right: 8px;
+    color: #f39c12;
+}
+
+.gateway-preferencial-selector select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.gateway-preferencial-selector small {
+    display: block;
+    color: #6c757d;
+    font-size: 12px;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .gateway-selector-list {
+        grid-template-columns: 1fr;
+    }
+    
+    .gateway-item {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .gateway-checkbox {
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+    
+    .gateway-icon {
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+    
+    .gateway-badge {
+        position: static;
+        margin-top: 10px;
+    }
+}
+
+/* Animações */
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+.gateway-item.selected {
+    animation: pulse 0.3s ease-in-out;
+}
+
+/* Estados */
+.gateway-item.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.gateway-item.loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.gateway-item.loading::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 30px;
+    height: 30px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #3498db;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
